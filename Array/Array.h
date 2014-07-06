@@ -12,45 +12,43 @@ public:
 	Array(int len);
 	Array(const Array<T> &that);
 	~Array();
-	//возвращает длину массива
+	//Returns the length of the array
 	int Length();
-	//возвращает истину, если длина массива 0
+	//Returns, if array is empty
 	bool IsEmpty();
-	//увеличивает массив до указанной величины
+	//Enlarge array to given size
 	Array& Resize(int size);
-	//добавляет элемент в конец массива
+	//Adds new item in the end of array
 	Array& Add(T newItem);
-	//добавляет элемент в указанную позицию
+	//Adds new item to the given pos
 	Array& Insert(T newItem, int ind);
-	//удаляет последний элемент массива
+	//Removes last elemen
 	Array& RemoveLast();
-	//Удаляет указанным элемент массива
+	//Removes given elem
 	Array& Remove(int ind);
-	//Сортирует массив по возрастанию
+	//Sorts array in acsending order
 	Array& Sort();
-	//Меняет порядок элементов в массиве на обратный
+	//Reverses order of elements in array
 	Array& Reverse();
-	//Перемешивает элементы массива
+	//Shuffles array
 	Array& Shuffle();
-	//Возвращает индекс первого вхождения указанного элемента в массив
+	//Returns index of first occurrence of some element in Array
 	int IndexOf(T item);
-	// Возвращает индекс последнего вхождения указанного элемента в массив
+	// Returns index of last occurrence of some element in Array
 	int LastIndexOf(T item);
-	//Возвращает индекс первого элемента в массиве, удовлетворяющего указанному условию
+	//Finds index of first element satisfying some conition.
 	int IndexWhere(Condition f);
-	//Доступ к элементу массива по индексу в []
 	T& operator[](int index);
-	//Проверяет, совпадают ли два массива
 	bool operator==(Array<T> that);
-	//Возвращает новый массив, состоящий из тех элементов исходного массива, которые удовлетворяю указанному условию
+	//Returns a new array, which contains all elements of the original array, which satisfy some condition
 	Array filter(Condition f);
-	//Возвращает новый массив, состоящий из тех элементов исходного массива, которые не удовлетворяю указанному условию
+	//Returns a new array, which contains all elements of the original array, which dont satisfy some condition
 	Array filterNot(Condition f);
-	//Проверяет, существует ли в массиве элемент, удовлетворяющий указанному условию
+	//Checks if any element in array satisfy some condition
 	bool Exists(Condition f);
-	//Проверяет, выполняется ли указанное условие для всех элементов массива
+	//Checks if all elements in array satisfy some condition
 	bool ForAll(Condition f);
-	//Возвращает новый массив типа U, полученный в резальтате применения ко всем элементам исходного массива заданной функции
+	//Creates a new array by applying givven function to original array
 	template<typename U>
 	Array<U> Map(U(*MapFunc)(T));
 };
