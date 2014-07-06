@@ -5,6 +5,11 @@
 
 using namespace std;
 
+bool AboveFive(int c)
+{
+	return c>5;
+}
+
 void main()
 {
 	srand(int(time(0)));
@@ -43,4 +48,16 @@ void main()
 	cout << endl;
 	for (int i = 0; i < a.Length(); i++)
 		cout << a[i] << ' ';
+	Array<int>b=a.filter(AboveFive);
+	cout << endl;
+	for (int i = 0; i < b.Length(); i++)
+		cout << b[i] << ' ';
+	Array<int>c = a.filter([](int x){return x < 5; });
+	cout << endl;
+	for (int i = 0; i < c.Length(); i++)
+		cout << c[i] << ' ';
+	Array<bool>d = a.Map(AboveFive);
+	cout << endl;
+	for (int i = 0; i < d.Length(); i++)
+		cout << d[i] << ' ';
 }

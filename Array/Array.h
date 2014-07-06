@@ -6,12 +6,14 @@ class Array
 	T** array;
 	int length;
 	void Sorting(int bot, int top);
+	typedef bool(*Condition)(T);
 public:
 	Array();
 	Array(int len);
 	Array(const Array<T> &that);
 	~Array();
 	int Length();
+	bool IsEmpty();
 	Array& Resize(int size);
 	Array& Add(T newItem);
 	Array& Insert(T newItem, int ind);
@@ -22,8 +24,15 @@ public:
 	Array& Shuffle();
 	int IndexOf(T item);
 	int LastIndexOf(T item);
+	int IndexWhere(Condition f);
 	T& operator[](int index);
 	bool operator==(Array<T> that);
+	Array filter(Condition f);
+	Array filterNot(Condition f);
+	bool Exists(Condition f);
+	bool ForAll(Condition f);
+	template<typename U>
+	Array<U> Map(U(*MapFunc)(T));
 };
 
 template <typename T>
@@ -40,10 +49,13 @@ template <typename T>
 Array<T>::Array(int len)
 {
 	length = len;
-	array = new T*[length];
-	for (int i = 0; i < length; i++)
+	if (length)
 	{
-		array[i] = new T;
+		array = new T*[length];
+		for (int i = 0; i < length; i++)
+		{
+			array[i] = new T;
+		}
 	}
 }
 
@@ -51,11 +63,14 @@ template <typename T>
 Array<T>::Array(const Array<T> &that)
 {
 	length = that.length;
-	array = new T*[length];
-	for (int i = 0; i < length; i++)
+	if (length)
 	{
-		array[i] = new T;
-		*array[i] = *that.array[i];
+		array = new T*[length];
+		for (int i = 0; i < length; i++)
+		{
+			array[i] = new T;
+			*array[i] = *that.array[i];
+		}
 	}
 }
 
@@ -77,6 +92,12 @@ template <typename T>
 int Array<T>::Length()
 {
 	return length;
+}
+
+template <typename T>
+bool Array<T>::IsEmpty()
+{
+	return length==0;
 }
 
 template <typename T>
@@ -107,6 +128,7 @@ Array<T>& Array<T>::Add(T newItem)
 	*array[length - 1] = newItem;
 	return *this;
 }
+
 template <typename T>
 Array<T>& Array<T>::Insert(T newItem, int ind)
 {
@@ -267,3 +289,88 @@ bool Array<T>::operator==(Array<T> that)
 		return true;
 	}
 }
+template <typename T>
+Array<T> Array<T>::filter(Condition f)
+{
+	int k = 0;
+	for (int i = 0; i < length; i++)
+	{
+		if (!f(*array[i]))
+			k++;
+	}
+	Array<T> tmp(length-k);
+	k = 0;
+	for (int i = 0; i < tmp.length; i++)
+	{
+		while(!f(*array[i+k]))
+			k++;
+		*tmp.array[i] = *array[i + k];
+	}
+	return tmp;
+}
+template <typename T>
+Array<T> Array<T>::filterNot(Condition f)
+{
+	int k = 0;
+	for (int i = 0; i < length; i++)
+	{
+		if (f(*array[i]))
+			k++;
+	}
+	Array<T> tmp(length - k);
+	k = 0;
+	for (int i = 0; i < tmp.length; i++)
+	{
+		while (f(*array[i + k]))
+			k++;
+		*tmp.array[i] = *array[i + k];
+	}
+	return tmp;
+}
+
+template <typename T>
+bool Array<T>::Exists(Condition f)
+{
+	for (int i = 0; i < length; i++)
+	{
+		if (f(array[i]))
+			return true;
+	}
+	return false;
+}
+
+template <typename T>
+bool Array<T>::ForAll(Condition f)
+{
+	for (int i = 0; i < length; i++)
+	{
+		if (!f(array[i]))
+			return false;
+	}
+	return true;
+}
+
+template <typename T>
+int Array<T>::IndexWhere(Condition f)
+{
+	for (int i = 0; i < length; i++)
+	{
+		if (f(array[i]))
+			return i;
+	}
+	return -1;
+}
+
+template <typename T>
+template <typename U>
+Array<U> Array<T>::Map(U(*MapFunc)(T))
+{
+	Array<U> tmp(length);
+	for (int i = 0; i < length; i++)
+	{
+		tmp[i] = MapFunc(*array[i]);
+	}
+	return tmp;
+}
+
+
